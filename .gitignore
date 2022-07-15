@@ -3,6 +3,12 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+gradle/
+.gradle
+gradle.properties
+gradlew
+gradlew.bat
+*.gradle
 
 ### STS ###
 .apt_generated
@@ -31,3 +37,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Project exclude paths
+/.gradle/

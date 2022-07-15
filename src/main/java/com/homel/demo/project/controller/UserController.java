@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("users")
 @AllArgsConstructor
@@ -21,6 +23,12 @@ public class UserController {
     @GetMapping(path = "/{id}", produces = "application/json")
     public UserRest getUser(@PathVariable long id) {
         return userMapper.rest(userService.getUser(id));
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
+                                     @RequestParam(value = "limit", defaultValue = "50") int limit) {
+        return userMapper.rests(userService.getUsers(page, limit));
     }
 
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

@@ -21,4 +21,6 @@ public interface UserMapper {
     CreateUserResponse response(UserDTO newUser);
 
     UserRest rest(UserDTO dto);
+
+    List<UserRest> rests(List<UserDTO> dtos);
 }

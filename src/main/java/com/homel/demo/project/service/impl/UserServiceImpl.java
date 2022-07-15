@@ -6,6 +6,9 @@ import com.homel.demo.project.mapper.UserMapper;
 import com.homel.demo.project.repository.UserRepository;
 import com.homel.demo.project.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -71,6 +75,13 @@ public class UserServiceImpl implements UserService {
         });
 
         userRepository.delete(userEntity);
+    }
+
+    @Override
+    public List<UserDTO> getUsers(int page, int limit) {
+        Pageable pageable = PageRequest.of(page, limit);
+
+        return userMapper.dtos(userRepository.findAll(pageable).getContent());
     }
 
     @Override

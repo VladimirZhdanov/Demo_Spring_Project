@@ -3,6 +3,7 @@ package com.homel.demo.project.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -25,5 +26,5 @@ public class Instructor {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "instructor",
     cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private List<Course> courses;
+    private List<Course> courses = new ArrayList<>();
 }

@@ -1,24 +1,30 @@
 package com.homel.demo.project.controller;
 
+import com.homel.demo.project.dto.RoleDTO;
 import com.homel.demo.project.dto.UserDTO;
+import com.homel.demo.project.mapper.UserMapper;
 import com.homel.demo.project.rest.CreateUserRequest;
 import com.homel.demo.project.rest.CreateUserResponse;
-import com.homel.demo.project.mapper.UserMapper;
 import com.homel.demo.project.rest.UserRest;
+import com.homel.demo.project.service.RoleService;
 import com.homel.demo.project.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.homel.demo.project.security.Roles.ROLE_USER;
 
 @RestController
 @RequestMapping("users")
 @AllArgsConstructor
 public class UserController {
 
-    private UserMapper userMapper;
-    private UserService userService;
+    private final UserMapper userMapper;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @GetMapping(path = "/{id}", produces = "application/json")
     public UserRest getUser(@PathVariable long id) {

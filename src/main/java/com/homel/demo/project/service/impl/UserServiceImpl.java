@@ -1,23 +1,26 @@
 package com.homel.demo.project.service.impl;
 
 import com.homel.demo.project.dto.UserDTO;
+import com.homel.demo.project.entity.RoleEntity;
 import com.homel.demo.project.entity.UserEntity;
 import com.homel.demo.project.mapper.UserMapper;
+import com.homel.demo.project.repository.RoleRepository;
 import com.homel.demo.project.repository.UserRepository;
+import com.homel.demo.project.security.UserPrincipal;
 import com.homel.demo.project.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.homel.demo.project.security.Roles.ROLE_USER;
 
 @AllArgsConstructor
 @Service
@@ -25,15 +28,20 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private UserMapper userMapper;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private RoleRepository roleRepository;
 
     @Override
+    @Transactional
     public UserDTO save(UserDTO userDTO) {
         if (userRepository.findByEmail(userDTO.getEmail()) != null) {
             throw new RuntimeException("User is already existed...");
         }
 
+        RoleEntity userRole = roleRepository.findByName(ROLE_USER.toString());
+
         UserEntity userEntity = userMapper.entity(userDTO);
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+        userEntity.getRoles().add(userRole);
 
         UserEntity savedUserEntity = userRepository.save(userEntity);
         return userMapper.dto(savedUserEntity);
@@ -91,6 +99,7 @@ public class UserServiceImpl implements UserService {
         if (userEntity == null) {
             throw new UsernameNotFoundException(email);
         }
-        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+
+        return new UserPrincipal(userEntity);
     }
 }

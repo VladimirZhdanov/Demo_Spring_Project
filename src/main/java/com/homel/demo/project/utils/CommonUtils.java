@@ -1,19 +1,29 @@
 package com.homel.demo.project.utils;
 
 import com.homel.demo.project.SpringApplicationContext;
-import com.homel.demo.project.security.AppProperties;
+import com.homel.demo.project.AppProperties;
 import org.springframework.data.util.Pair;
 
 import java.util.List;
-import java.util.Map;
 
 public class CommonUtils {
+    /**
+     * Get property by given name
+     * @param name name
+     * @return property
+     */
     public static String getProperty(String name) {
         AppProperties appProperties = SpringApplicationContext.getBean("appProperties", AppProperties.class);
         return appProperties.getProperties(name);
     }
 
-    public static String getErrorMessage(String message, List<Pair<String, String>> args) {
+    /**
+     * Make error message by given message and arguments
+     * @param message message
+     * @param args arguments
+     * @return full exception message
+     */
+    public static String getExceptionMessage(String message, List<Pair<String, String>> args) {
         if (message == null) return "";
         if (args == null || args.isEmpty()) return message;
 

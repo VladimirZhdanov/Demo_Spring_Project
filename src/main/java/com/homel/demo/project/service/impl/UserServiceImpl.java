@@ -22,7 +22,7 @@ import java.util.Optional;
 import static com.homel.demo.project.error.ErrorMessages.USER_IS_ALREADY_EXISTED;
 import static com.homel.demo.project.error.ErrorMessages.USER_IS_NOT_FOUND;
 import static com.homel.demo.project.security.Roles.ROLE_USER;
-import static com.homel.demo.project.utils.CommonUtils.getErrorMessage;
+import static com.homel.demo.project.utils.CommonUtils.getExceptionMessage;
 
 @AllArgsConstructor
 @Service
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUser(long id) {
         Optional<UserEntity> userEntity = userRepository.findById(id);
         if (userEntity.isEmpty()) {
-            throw new UsernameNotFoundException(getErrorMessage(USER_IS_NOT_FOUND.getValue(),
+            throw new UsernameNotFoundException(getExceptionMessage(USER_IS_NOT_FOUND.getValue(),
                     List.of(Pair.of("id", String.valueOf(id)))));
         }
         return userMapper.dto(userEntity.get());
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDTO updateUser(UserDTO userDTO) {
         UserEntity userEntity = userRepository.findById(userDTO.getId()).orElseThrow(() -> {
-            throw new UsernameNotFoundException(getErrorMessage(USER_IS_NOT_FOUND.getValue(),
+            throw new UsernameNotFoundException(getExceptionMessage(USER_IS_NOT_FOUND.getValue(),
                     List.of(Pair.of("id", String.valueOf(userDTO.getId())))));
         });
 
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(long id) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> {
-            throw new UsernameNotFoundException(getErrorMessage(USER_IS_NOT_FOUND.getValue(),
+            throw new UsernameNotFoundException(getExceptionMessage(USER_IS_NOT_FOUND.getValue(),
                     List.of(Pair.of("id", String.valueOf(id)))));
         });
 
@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByEmail(email);
 
         if (userEntity == null) {
-            throw new UsernameNotFoundException(getErrorMessage(USER_IS_NOT_FOUND.getValue(),
+            throw new UsernameNotFoundException(getExceptionMessage(USER_IS_NOT_FOUND.getValue(),
                     List.of(Pair.of("email", email))));
         }
 

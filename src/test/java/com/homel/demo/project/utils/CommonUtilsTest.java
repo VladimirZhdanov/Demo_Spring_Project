@@ -13,7 +13,7 @@ class CommonUtilsTest {
 
     @Test
     public void shouldReturnMessageWithArgsStringWhenPassMap() {
-        String errorMessage = CommonUtils.getErrorMessage(USER_IS_NOT_FOUND.getValue(),
+        String errorMessage = CommonUtils.getExceptionMessage(USER_IS_NOT_FOUND.getValue(),
                 List.of(Pair.of("id", "1"), Pair.of("name", "Tome")));
 
         assertEquals(USER_IS_NOT_FOUND.getValue() + ", arguments: id : 1, name : Tome", errorMessage);
@@ -21,21 +21,21 @@ class CommonUtilsTest {
 
     @Test
     public void shouldReturnMessageStringWhenPassNull() {
-        String errorMessage = CommonUtils.getErrorMessage(USER_IS_NOT_FOUND.getValue(), null);
+        String errorMessage = CommonUtils.getExceptionMessage(USER_IS_NOT_FOUND.getValue(), null);
 
         assertEquals(USER_IS_NOT_FOUND.getValue(), errorMessage);
     }
 
     @Test
     public void shouldReturnMessageStringWhenPassEmptyMap() {
-        String errorMessage = CommonUtils.getErrorMessage(USER_IS_NOT_FOUND.getValue(), new ArrayList<>());
+        String errorMessage = CommonUtils.getExceptionMessage(USER_IS_NOT_FOUND.getValue(), new ArrayList<>());
 
         assertEquals(USER_IS_NOT_FOUND.getValue(), errorMessage);
     }
 
     @Test
     public void shouldReturnEmptyMessageWhenPassNullMessage() {
-        String errorMessage = CommonUtils.getErrorMessage(null, List.of(Pair.of("id", "1"), Pair.of("name", "Tome")));
+        String errorMessage = CommonUtils.getExceptionMessage(null, List.of(Pair.of("id", "1"), Pair.of("name", "Tome")));
 
         assertEquals("", errorMessage);
     }

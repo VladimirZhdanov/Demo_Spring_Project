@@ -1,4 +1,4 @@
-package com.homel.demo.project.security;
+package com.homel.demo.project;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.PropertySource;

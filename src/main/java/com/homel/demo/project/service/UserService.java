@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
-    UserDTO save(UserDTO userDTO);
+    UserDTO createNewUser(UserDTO userDTO);
     UserDTO getUser(String email);
     UserDTO getUser(long id);
     UserDTO updateUser(UserDTO userDTO);

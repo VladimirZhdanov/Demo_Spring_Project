@@ -1,7 +1,6 @@
 package com.homel.demo.project.service.impl;
 
 import com.homel.demo.project.dto.UserDTO;
-import com.homel.demo.project.entity.RoleEntity;
 import com.homel.demo.project.entity.UserEntity;
 import com.homel.demo.project.mapper.UserMapper;
 import com.homel.demo.project.repository.RoleRepository;
@@ -10,7 +9,7 @@ import com.homel.demo.project.security.UserPrincipal;
 import com.homel.demo.project.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.util.Pair;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,7 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.homel.demo.project.error.ErrorMessages.USER_IS_ALREADY_EXISTED;
+import static com.homel.demo.project.error.ErrorMessages.USER_IS_NOT_FOUND;
 import static com.homel.demo.project.security.Roles.ROLE_USER;
+import static com.homel.demo.project.utils.CommonUtils.getErrorMessage;
 
 @AllArgsConstructor
 @Service
@@ -32,22 +34,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDTO save(UserDTO userDTO) {
+    public UserDTO createNewUser(UserDTO userDTO) {
         if (userRepository.findByEmail(userDTO.getEmail()) != null) {
-            throw new RuntimeException("User is already existed...");
+            throw new RuntimeException(USER_IS_ALREADY_EXISTED.getValue());
         }
-
-        RoleEntity userRole = roleRepository.findByName(ROLE_USER.toString());
 
         UserEntity userEntity = userMapper.entity(userDTO);
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
-        userEntity.getRoles().add(userRole);
+        userEntity.getRoles().add(roleRepository.findByName(ROLE_USER.toString()));
 
-        UserEntity savedUserEntity = userRepository.save(userEntity);
-        return userMapper.dto(savedUserEntity);
+        return userMapper.dto(userRepository.save(userEntity));
     }
 
     @Override
+    @Transactional
     public UserDTO getUser(String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity == null) {
@@ -57,18 +57,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO getUser(long id) {
         Optional<UserEntity> userEntity = userRepository.findById(id);
         if (userEntity.isEmpty()) {
-            throw new UsernameNotFoundException(String.valueOf(id));
+            throw new UsernameNotFoundException(getErrorMessage(USER_IS_NOT_FOUND.getValue(),
+                    List.of(Pair.of("id", String.valueOf(id)))));
         }
         return userMapper.dto(userEntity.get());
     }
 
     @Override
+    @Transactional
     public UserDTO updateUser(UserDTO userDTO) {
         UserEntity userEntity = userRepository.findById(userDTO.getId()).orElseThrow(() -> {
-            throw new UsernameNotFoundException("User is not found: " + userDTO.getId());
+            throw new UsernameNotFoundException(getErrorMessage(USER_IS_NOT_FOUND.getValue(),
+                    List.of(Pair.of("id", String.valueOf(userDTO.getId())))));
         });
 
         userEntity.setName(userDTO.getName());
@@ -77,27 +81,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(long id) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> {
-            throw new UsernameNotFoundException("User is not found: " + id);
+            throw new UsernameNotFoundException(getErrorMessage(USER_IS_NOT_FOUND.getValue(),
+                    List.of(Pair.of("id", String.valueOf(id)))));
         });
 
         userRepository.delete(userEntity);
     }
 
     @Override
+    @Transactional
     public List<UserDTO> getUsers(int page, int limit) {
-        Pageable pageable = PageRequest.of(page, limit);
-
-        return userMapper.dtos(userRepository.findAll(pageable).getContent());
+        return userMapper.dtos(userRepository.findAll(PageRequest.of(page, limit)).getContent());
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByEmail(email);
 
         if (userEntity == null) {
-            throw new UsernameNotFoundException(email);
+            throw new UsernameNotFoundException(getErrorMessage(USER_IS_NOT_FOUND.getValue(),
+                    List.of(Pair.of("email", email))));
         }
 
         return new UserPrincipal(userEntity);

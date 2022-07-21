@@ -27,6 +27,9 @@ import static com.homel.demo.project.utils.CommonUtils.getExceptionMessage;
 @AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
+    private static final String ID = "id";
+    private static final String EMAIL = "email";
+
     private UserRepository userRepository;
     private UserMapper userMapper;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -62,7 +65,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> userEntity = userRepository.findById(id);
         if (userEntity.isEmpty()) {
             throw new UsernameNotFoundException(getExceptionMessage(USER_IS_NOT_FOUND.getValue(),
-                    List.of(Pair.of("id", String.valueOf(id)))));
+                    List.of(Pair.of(ID, String.valueOf(id)))));
         }
         return userMapper.dto(userEntity.get());
     }
@@ -104,7 +107,7 @@ public class UserServiceImpl implements UserService {
 
         if (userEntity == null) {
             throw new UsernameNotFoundException(getExceptionMessage(USER_IS_NOT_FOUND.getValue(),
-                    List.of(Pair.of("email", email))));
+                    List.of(Pair.of(EMAIL, email))));
         }
 
         return new UserPrincipal(userEntity);

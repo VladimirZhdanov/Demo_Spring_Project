@@ -1,6 +1,5 @@
-package com.homel.demo.project;
+package com.homel.demo.project.init;
 
-import antlr.collections.List;
 import com.homel.demo.project.entity.AuthorityEntity;
 import com.homel.demo.project.entity.RoleEntity;
 import com.homel.demo.project.entity.UserEntity;
@@ -10,14 +9,12 @@ import com.homel.demo.project.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 import static com.homel.demo.project.security.Authorities.*;
 import static com.homel.demo.project.security.Roles.ROLE_ADMIN;
@@ -37,7 +34,7 @@ public class InitialUsersSetup {
         AuthorityEntity readAuthority = createAuthority(READ_AUTHORITY.toString());
         AuthorityEntity writeAuthority = createAuthority(WRITE_AUTHORITY.toString());
         AuthorityEntity deleteAuthority = createAuthority(DELETE_AUTHORITY.toString());
-        RoleEntity roleUser = createRole(ROLE_USER.toString(), Arrays.asList(readAuthority, writeAuthority));
+        createRole(ROLE_USER.toString(), Arrays.asList(readAuthority, writeAuthority));
         RoleEntity roleAdmin = createRole(ROLE_ADMIN.toString(), Arrays.asList(readAuthority, writeAuthority, deleteAuthority));
 
         UserEntity adminUser = new UserEntity();
@@ -48,7 +45,6 @@ public class InitialUsersSetup {
         adminUser.getRoles().add(roleAdmin);
 
         userRepository.save(adminUser);
-
     }
 
     private AuthorityEntity createAuthority(String name) {

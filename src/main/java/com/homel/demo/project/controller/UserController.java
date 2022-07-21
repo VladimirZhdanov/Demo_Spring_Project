@@ -5,7 +5,6 @@ import com.homel.demo.project.mapper.UserMapper;
 import com.homel.demo.project.rest.CreateUserRequest;
 import com.homel.demo.project.rest.CreateUserResponse;
 import com.homel.demo.project.rest.UserRest;
-import com.homel.demo.project.service.RoleService;
 import com.homel.demo.project.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
@@ -20,9 +19,8 @@ public class UserController {
 
     private final UserMapper userMapper;
     private final UserService userService;
-    private final RoleService roleService;
 
-    @GetMapping(path = "/{id}", produces = "application/json")
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public UserRest getUser(@PathVariable long id) {
         return userMapper.rest(userService.getUser(id));
     }
@@ -40,15 +38,13 @@ public class UserController {
         return userMapper.rest(user);
     }
 
-    @DeleteMapping(path = "/{id}", produces = "application/json")
+    @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public void deleteUser(@PathVariable long id) {
         userService.deleteUser(id);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public CreateUserResponse createUser(@RequestBody CreateUserRequest createUserRequest) {
-        UserDTO newUser = userService.createNewUser(userMapper.dto(createUserRequest));
-
-        return userMapper.response(newUser);
+        return userMapper.response(userService.createNewUser(userMapper.dto(createUserRequest)));
     }
 }

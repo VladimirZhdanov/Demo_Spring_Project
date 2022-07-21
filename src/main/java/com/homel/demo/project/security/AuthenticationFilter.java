@@ -12,7 +12,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -62,5 +61,4 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         response.addHeader(CommonUtils.getProperty(HEADER_STRING), CommonUtils.getProperty(TOKEN_PREFIX) + token);
         response.addHeader("User id", String.valueOf(user.getId()));
     }
-
 }

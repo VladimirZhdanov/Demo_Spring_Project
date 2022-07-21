@@ -1,6 +1,5 @@
 package com.homel.demo.project.security;
 
-import com.homel.demo.project.entity.AuthorityEntity;
 import com.homel.demo.project.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class UserPrincipal implements UserDetails {
     private final UserEntity userEntity;

@@ -8,7 +8,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AuthorityMapper {
-
     AuthorityDTO dto(AuthorityEntity entity);
     List<AuthorityDTO> dtos(List<AuthorityEntity> entities);
     AuthorityEntity entity(AuthorityDTO dto);

@@ -56,7 +56,6 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         } catch (Exception e) {
             throw new AuthenticationServiceException(e.getMessage(), e);
         }
-
         return null;
     }
 }

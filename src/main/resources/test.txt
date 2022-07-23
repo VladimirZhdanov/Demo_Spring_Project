@@ -1,0 +1,4 @@
+docker build --tag=application:latest .
+docker-compose config
+docker-compose up
+docker-compose down

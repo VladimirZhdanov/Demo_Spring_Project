@@ -1,14 +1,14 @@
-#spring:
-#  datasource:
-#    url: jdbc:h2:mem:testdb
-#    username: sa
-#    password: password
-#  jpa:
-#    database-platform: org.hibernate.dialect.H2Dialect
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2-console
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 logging:
   level:
     org:
@@ -27,3 +27,7 @@ security:
     signUpUrl: /users
     h2ConsoleUrl: /h2-console/**
     loginUrl: /users/login
+
+feign:
+  circuitbreaker:
+    enabled: true
